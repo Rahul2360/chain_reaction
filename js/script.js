@@ -9,10 +9,25 @@ const box = {
 	width: 40
 };
 
-const player = ['p1', 'p2'];
+var player_turn;
+const player = [
+  {
+    id :1,
+    name: "Rahul",
+    color: "#79FA39" 
+  },
+  {
+    id :2,
+    name: "Sahil",
+    color: "#F34533"
+  }
+];
 
 $(document).ready(function () {
-	draw();
+  draw();
+  
+  document.getElementById('player_name').innerHTML = player[0].name + " turn";
+  player_turn = player[0].id;
 });
 
 function draw() {
@@ -59,26 +74,35 @@ function getMousePosition(c, evt) {
 function handleClick(e) {
   var pos = getMousePosition(canvas, e);
   var x,y;
+  // for (let i = 0 ;i < column_count; i++) {
+  //   if (pos.x > (box.width*i) &&  pos.x  < (box.width*(i + 1))) {
+  //     x = i;
+  //   }
+  // }
+  // for (let j = 0 ;j < row_count; j++) {
+  //   if (pos.y > (box.height*j) &&  pos.y < (box.height*(j + 1))) {
+  //     y = j;
+  //   }
+  // }
+
   for (let i = 0 ;i < column_count; i++) {
-    if (pos.x > (box.width*i) &&  pos.x  < (box.width*(i + 1))) {
-      x = i;
+    for (let j = 0 ;j < row_count; j++) {
+      if (pos.x > (box.width*i) &&  pos.x  < (box.width*(i + 1)) &&
+      pos.y > (box.height*j) &&  pos.y < (box.height*(j + 1))) {
+        x = i;
+        y = j;
+      }
     }
   }
-  for (let j = 0 ;j < row_count; j++) {
-    if (pos.y > (box.height*j) &&  pos.y < (box.height*(j + 1))) {
-      y = j;
-    }
-  }
-  // console.log(pos.y);  
+  // console.log(pos);  
   // console.log((pos.x + lineWidth)/box.width);
   // console.log((pos.x - lineWidth)/box.width);
   // console.log("******************************");
   // console.log((pos.y + lineWidth)/box.height);
   // console.log((pos.y - lineWidth)/box.height);
-
-  var ctx = canvas.getContext('2d');
-  ctx.fillStyle = "#79FA39";
-  ctx.fillRect((x*box.width) + lineWidth, (y*box.height)+ lineWidth, box.width-(2*lineWidth), box.height-(2*lineWidth));
+  if (x != undefined && y != undefined) {
+    switch_player_turn(x, y);
+  }
   // if ( pos.x >  0 + lineWidth &&
   //   pos.x <  box.width + lineWidth && 
   //   pos.y >  0 + lineWidth &&
@@ -92,6 +116,22 @@ function handleClick(e) {
 	// alert(posx + "  " + posy)
 }
 
+function switch_player_turn(x, y) {
+  var ctx = canvas.getContext('2d');
+  for (let i = 0; i< player.length ; i++) {
+    if (player[i].id == player_turn) {
+      if (i != player.length-1) {
+        player_turn = player[i+1].id;
+        ctx.fillStyle = player[i+1].color;
+        break;
+      } else {
+        player_turn = player[0].id;
+        ctx.fillStyle = player[0].color;
+      }
+    }
+  }
+  ctx.fillRect((x*box.width) + lineWidth, (y*box.height)+ lineWidth, box.width-(2*lineWidth), box.height-(2*lineWidth));
+}
 
 
 function reset() {
