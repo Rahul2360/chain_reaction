@@ -20,6 +20,11 @@ const player = [
     id :2,
     name: "Sahil",
     color: "#F34533"
+  },
+  {
+    id :3,
+    name: "Mohit",
+    color: "#33F3D9"
   }
 ];
 
@@ -50,22 +55,6 @@ function draw() {
         matrix.push(temp_obj);
       }
     }
-    console.log(matrix);
-
-		// for (let i = 1; i<= column_count; i++ ) {
-		// 	ctx.lineWidth = lineWidth;
-		// 	ctx.beginPath();
-		// 	ctx.moveTo(box.width*i, 0);
-		// 	ctx.lineTo(box.width*i, box.width*row_count)
-		// 	ctx.stroke();
-		// }
-		// for (let j = 1; j <= row_count; j++) {
-		// 	ctx.lineWidth = lineWidth;
-		// 	ctx.beginPath();
-		// 	ctx.moveTo(0, box.height*j);
-		// 	ctx.lineTo(box.height*column_count, box.height*j)
-		// 	ctx.stroke();
-		// }
 
 	}
 	canvas.addEventListener('click',handleClick)	;	
@@ -82,16 +71,6 @@ function getMousePosition(c, evt) {
 function handleClick(e) {
   var pos = getMousePosition(canvas, e);
   var matrix_i,matrix_j;
-  // for (let i = 0 ;i < column_count; i++) {
-  //   if (pos.x > (box.width*i) &&  pos.x  < (box.width*(i + 1))) {
-  //     x = i;
-  //   }
-  // }
-  // for (let j = 0 ;j < row_count; j++) {
-  //   if (pos.y > (box.height*j) &&  pos.y < (box.height*(j + 1))) {
-  //     y = j;
-  //   }
-  // }
 
   for (let i = 0 ;i < column_count; i++) {
     for (let j = 0 ;j < row_count; j++) {
@@ -102,12 +81,6 @@ function handleClick(e) {
       }
     }
   }
-  // console.log(pos);  
-  // console.log((pos.x + lineWidth)/box.width);
-  // console.log((pos.x - lineWidth)/box.width);
-  // console.log("******************************");
-  // console.log((pos.y + lineWidth)/box.height);
-  // console.log((pos.y - lineWidth)/box.height);
   if (matrix_i != undefined && matrix_j != undefined) {
     var value = check_matrix(matrix_i,matrix_j);
     if  (!value) {
@@ -115,17 +88,6 @@ function handleClick(e) {
       switch_player_turn(matrix_i, matrix_j);
     }
   }
-  // if ( pos.x >  0 + lineWidth &&
-  //   pos.x <  box.width + lineWidth && 
-  //   pos.y >  0 + lineWidth &&
-  //   pos.y <  box.height + lineWidth) {
-  //     var ctx = canvas.getContext('2d');
-  //     ctx.fillStyle = "#8ED6FF";
-  //     ctx.fillRect(0 + lineWidth, 0 + lineWidth, box.width-(2*lineWidth), box.height-(2*lineWidth));
-  //   }
-	// posx = pos.x;
-	// posy = pos.y;
-	// alert(posx + "  " + posy)
 }
 
 function switch_player_turn(x, y) {
@@ -135,10 +97,12 @@ function switch_player_turn(x, y) {
       if (i != player.length-1) {
         player_turn = player[i+1].id;
         ctx.fillStyle = player[i].color;
+        document.getElementById('player_name').innerHTML = player[i+1].name + " turn";
         break;
       } else {
         player_turn = player[0].id;
         ctx.fillStyle = player[player.length - 1].color;
+        document.getElementById('player_name').innerHTML = player[0].name + " turn";
       }
     }
   }
@@ -165,10 +129,11 @@ function fill_matrix(j_value, i_value) {
 }
 
 function reset() {
-	if (canvas.getContext) {
-		var ctx = canvas.getContext('2d');
+  if (canvas.getContext) {
+    var ctx = canvas.getContext('2d');
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
-		ctx.beginPath();
+    ctx.beginPath();
+    matrix = [];
 	}
 }
 
