@@ -57,10 +57,39 @@ function getMousePosition(c, evt) {
 }
 
 function handleClick(e) {
-	var pos = getMousePosition(canvas, e);
-	posx = pos.x;
-	posy = pos.y;
-	alert(posx + "  " + posy)
+  var pos = getMousePosition(canvas, e);
+  var x,y;
+  for (let i = 0 ;i < column_count; i++) {
+    if (pos.x > (box.width*i) &&  pos.x  < (box.width*(i + 1))) {
+      x = i;
+    }
+  }
+  for (let j = 0 ;j < row_count; j++) {
+    if (pos.y > (box.height*j) &&  pos.y < (box.height*(j + 1))) {
+      y = j;
+    }
+  }
+  // console.log(pos.y);  
+  // console.log((pos.x + lineWidth)/box.width);
+  // console.log((pos.x - lineWidth)/box.width);
+  // console.log("******************************");
+  // console.log((pos.y + lineWidth)/box.height);
+  // console.log((pos.y - lineWidth)/box.height);
+
+  var ctx = canvas.getContext('2d');
+  ctx.fillStyle = "#79FA39";
+  ctx.fillRect((x*box.width) + lineWidth, (y*box.height)+ lineWidth, box.width-(2*lineWidth), box.height-(2*lineWidth));
+  // if ( pos.x >  0 + lineWidth &&
+  //   pos.x <  box.width + lineWidth && 
+  //   pos.y >  0 + lineWidth &&
+  //   pos.y <  box.height + lineWidth) {
+  //     var ctx = canvas.getContext('2d');
+  //     ctx.fillStyle = "#8ED6FF";
+  //     ctx.fillRect(0 + lineWidth, 0 + lineWidth, box.width-(2*lineWidth), box.height-(2*lineWidth));
+  //   }
+	// posx = pos.x;
+	// posy = pos.y;
+	// alert(posx + "  " + posy)
 }
 
 
@@ -72,7 +101,6 @@ function reset() {
 		ctx.beginPath();
 	}
 }
-
 
 function getDimension() {
 	if (row_count != null && column_count != null) {
