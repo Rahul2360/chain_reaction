@@ -1,5 +1,5 @@
-let row_count = 5;
-let column_count = 5;
+let row_count = 4;
+let column_count = 4;
 const lineWidth = 1;
 
 const canvas = document.getElementById('main-canvas');
@@ -14,17 +14,20 @@ const player = [
   {
     id :1,
     name: "Rahul",
-    color: "#79FA39" 
+    color: "#79FA39",
+    text_color: "#0A8C5C"
   },
   {
     id :2,
     name: "Sahil",
-    color: "#F34533"
+    color: "#F34533",
+    text_color: "#8b0000"
   },
   {
     id :3,
     name: "Mohit",
-    color: "#33F3D9"
+    color: "#33F3D9",
+    text_color: "#2323AF"
   }
 ];
 
@@ -50,7 +53,9 @@ function draw() {
         ctx.stroke();
         var temp_obj = {};
         temp_obj[i+ '_' + j] = {
-          value : false
+          value : false,
+          count: 0,
+          player_id: null
         };
         matrix.push(temp_obj);
       }
@@ -96,17 +101,24 @@ function switch_player_turn(x, y) {
     if (player[i].id == player_turn) {
       if (i != player.length-1) {
         player_turn = player[i+1].id;
+
         ctx.fillStyle = player[i].color;
+        ctx.fillRect((x*box.width) + lineWidth, (y*box.height)+ lineWidth, box.width-(2*lineWidth), box.height-(2*lineWidth));
         document.getElementById('player_name').innerHTML = player[i+1].name + " turn";
+        ctx.fillStyle = player[i].text_color;
         break;
       } else {
         player_turn = player[0].id;
         ctx.fillStyle = player[player.length - 1].color;
+        ctx.fillRect((x*box.width) + lineWidth, (y*box.height)+ lineWidth, box.width-(2*lineWidth), box.height-(2*lineWidth));
         document.getElementById('player_name').innerHTML = player[0].name + " turn";
+        ctx.fillStyle = player[player.length - 1].text_color;
       }
     }
   }
-  ctx.fillRect((x*box.width) + lineWidth, (y*box.height)+ lineWidth, box.width-(2*lineWidth), box.height-(2*lineWidth));
+  ctx.font = "18pt sans-serif";
+  ctx.textAlign = "center";
+  ctx.fillText("0", ((x+1)*(box.width)) -20, ((y+1)*(box.height)) -12);
 }
 
 
@@ -126,6 +138,8 @@ function fill_matrix(j_value, i_value) {
   var index_i = parseInt(i_value*column_count + j_value);
   var key_name = Object.keys(matrix[index_i]);
   matrix[index_i][key_name].value = true;
+  matrix[index_i][key_name].count++;
+  matrix[index_i][key_name].player_id = player_turn;
 }
 
 function reset() {
