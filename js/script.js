@@ -37,6 +37,8 @@ $(document).ready(function () {
   draw();
   
   document.getElementById('player_name').innerHTML = player[0].name + " turn";
+  document.getElementById('player_name').style.color = player[0].color;
+
   player_turn = player[0].id;
 });
 
@@ -97,6 +99,8 @@ function handleClick(e) {
 
 function switch_player_turn(x, y) {
   var ctx = canvas.getContext('2d');
+  var index_i = parseInt(y*column_count + x);
+  var val = y + '_' + x;
   for (let i = 0; i< player.length ; i++) {
     if (player[i].id == player_turn) {
       if (i != player.length-1) {
@@ -105,6 +109,7 @@ function switch_player_turn(x, y) {
         ctx.fillStyle = player[i].color;
         ctx.fillRect((x*box.width) + lineWidth, (y*box.height)+ lineWidth, box.width-(2*lineWidth), box.height-(2*lineWidth));
         document.getElementById('player_name').innerHTML = player[i+1].name + " turn";
+        document.getElementById('player_name').style.color = player[i+1].color;
         ctx.fillStyle = player[i].text_color;
         break;
       } else {
@@ -112,13 +117,14 @@ function switch_player_turn(x, y) {
         ctx.fillStyle = player[player.length - 1].color;
         ctx.fillRect((x*box.width) + lineWidth, (y*box.height)+ lineWidth, box.width-(2*lineWidth), box.height-(2*lineWidth));
         document.getElementById('player_name').innerHTML = player[0].name + " turn";
+        document.getElementById('player_name').style.color = player[0].color;
         ctx.fillStyle = player[player.length - 1].text_color;
       }
     }
   }
   ctx.font = "18pt sans-serif";
   ctx.textAlign = "center";
-  ctx.fillText("0", ((x+1)*(box.width)) -20, ((y+1)*(box.height)) -12);
+  ctx.fillText(matrix[index_i][val].count, ((x+1)*(box.width)) -20, ((y+1)*(box.height)) -12);
 }
 
 
@@ -126,8 +132,41 @@ function check_matrix(j_value,i_value) {
   var data_exist = false;
   var index_i = parseInt(i_value*column_count + j_value);
   var val = i_value + '_' + j_value;
-  if(matrix[index_i][val].value == true){
-    data_exist = true;
+
+  // Main Logic part 1
+  if(( i_value == 0 && j_value == 0) ||
+     ( i_value == 0 && j_value == row_count -1) || 
+     ( i_value == column_count -1 && j_value == 0) || 
+     ( i_value == column_count -1 && j_value == row_count -1)) {
+    if (matrix[index_i][val].player_id != null) {
+      if(matrix[index_i][val].count >= 1 || matrix[index_i][val].player_id != player_turn){
+        data_exist = true;
+      }
+    } else {
+      if(matrix[index_i][val].count >= 1){
+        data_exist = true;
+      }
+    }
+  } else if ((i_value == 0 && j_value != 0) || (j_value == 0 && i_value != 0)) {
+    if (matrix[index_i][val].player_id != null) {
+      if(matrix[index_i][val].count >= 2 || matrix[index_i][val].player_id != player_turn){
+        data_exist = true;
+      }
+    } else {
+      if(matrix[index_i][val].count >= 2){
+        data_exist = true;
+      }
+    }
+  } else { 
+    if (matrix[index_i][val].player_id != null) {
+      if(matrix[index_i][val].count >= 3 || matrix[index_i][val].player_id != player_turn){
+        data_exist = true;
+      } 
+    } else {
+      if(matrix[index_i][val].count >= 3){
+        data_exist = true;
+      }
+    }
   }
   return data_exist;
 }
@@ -140,6 +179,7 @@ function fill_matrix(j_value, i_value) {
   matrix[index_i][key_name].value = true;
   matrix[index_i][key_name].count++;
   matrix[index_i][key_name].player_id = player_turn;
+  console.log(matrix);
 }
 
 function reset() {
